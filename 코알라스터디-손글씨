@@ -1,0 +1,69 @@
+#1 데이터 불러오기
+import numpy as np
+import pandas as pd
+df = pd.read_csv('data/digit.csv')
+df.head()
+
+#2 EDA&Feature Engineering
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+import seaborn as sns
+sns.set()
+df.describe()
+
+sns.catplot(data = df, x ='label', kind = 'count')
+
+#이미지 살펴보기
+numbers = df.drop(['label'], axis = 1)
+
+nth = 0
+img = np.reshape(numbers.iloc[nth].values, [28, 28])
+plt.imshow(img)
+plt.show()
+###########################################################흠 reshape 하나도 기억이 안나는 군 
+
+#3 Dataset 구성하기 
+train_data = df.drop('label', axis = 1)
+target_data = df['label']
+
+print(train_data.shape, target_data.shape)
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(train_data, target_data, test_size = 0.2)
+
+print(train_data.shape, x_train.shape, x_test.shape)
+
+#모델링과 학습
+from sklearn.ensemble import RandomForestClassifier
+forest = RandomForestClassifier(n_estimators = 100)
+
+#train 데이터 학습
+forest.fit(x_train, y_train)
+print('training set accuracy:', forest.score(x_train, y_train)
+
+print('test set accuracy:', forest.score(x_test, y_test)) #인식 정확도 출력
+
+#random으로 픽하기 
+import random
+for i in range(4):
+  n =  random.randrange(0, len(x_test))
+  
+  img = np.reshape(x_test.iloc[n].values, [28, 28])
+  plt.imshow(img)
+  plt.show()
+  
+  result = forest.predict([x_test.iloc[n].values])[0]
+  print("인식된 숫자는", result, "입니다.")
+  
+# 밑으로는 심화과정
+#SVR support vector machine 사용해보기
+
+from sklearn.svm import SVC
+model = SVC()
+model.fit(x_train, y_train)
+
+print('training set accuracy:', model.score(x_train, y_train))
+print('test set accuracy:', model.score(x_test, y_test))
+
+
