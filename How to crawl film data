@@ -5,18 +5,18 @@ import pandas as pd
 import csv
 from openpyxl import load_workbook
 
-# 엑셀파일 확인하기
+# To check Excel File
 filename = "movie_lists.xlsx"
 data = pd.read_excel(filename)
-# 영화 제목 불러오기
+# Crawling the titles of movies
 workbook = load_workbook(filename="movie_lists.xlsx")
-sheet = workbook.active   #여기가 핵심- movie titles 가져와서 Url이랑 합치려면 Workbook 필요
-# url 루프 만들기
+sheet = workbook.active   #key- movie titles+Url>Workbook needed
+# url LOOPING
 titles=[]
 url_list = []
 base_url = "https://www.the-numbers.com/movie/"
-for row in sheet.iter_rows():                 #sheet 에서 한 줄 씩 꺼내서, 변수 a에 할당, 제목 저장 그리고 URL 수정
-    a = row[0].value
+for row in sheet.iter_rows():                 #Get 1 line from sheet, allocate it to variable 'a', titles and url
+a = row[0].value
     titles.append(a)
     b = base_url+a+'-(2019)#tab=summary'
     url_list.append(b)
@@ -29,7 +29,7 @@ wr.writerow(['number', 'production budget'])
 
 
 failure_rows =[]
-k = open('failure_googled.txt', 'r', encoding='utf-8')  #text 파일 > csv 파일로 만들기
+k = open('failure_googled.txt', 'r', encoding='utf-8')  #text file > csv file
 while True:
     line = k.readline()
     if not line: break
@@ -37,11 +37,11 @@ while True:
 #     print(line)
 k.close()
 
-# 문자열 split해주기
+# Splitting str
 for f in range(1, len(failure_rows)):
     a = failure_rows[f].split()
     b = a[1:]
-    b = "". join(b)   #띄어쓰기 간격으로 번호랑 예산비용 분리해서 적기
+    b = "". join(b)   #number and production cost- divded with spacebar
     wr.writerow([a[0], b]) 
 fr.close()
     
@@ -61,7 +61,7 @@ while True:
 k.close()
 
 
-# 문자열 split해주기
+# Splitting str 
 for f in range(len(failure_rows2)):
     a = failure_rows2[f].split()
     b = a[1:]
@@ -75,7 +75,7 @@ budgets=[]
 try:
     
     for i in range(len(url_list)):
-        raw = requests.get(url_list[i])   #url 리스트의 순번 +1 = movie_lists (엑셀파일은 1 더해져서 시작하니까)
+        raw = requests.get(url_list[i])   #url list number+1 = movie_lists(which starts with number 1 )
         html= raw.content
         soup = BeautifulSoup(html, 'html5lib')
         budget = soup.select("div#summary.content>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(4)>td:nth-of-type(2)")
@@ -95,7 +95,7 @@ for i in range(len(budgets)):
             
     except: pass
         
-# 텍스트 파일 변환1
+# conversion of text file 1
 import pandas as pd 
 import csv
 data = pd.read_csv("c:/Users/gytkd/Desktop/production_budget_1.csv")
@@ -129,7 +129,7 @@ for i in range(len(pro_data)):
 
 f.close()
 
-#텍스트 파일 변환2
+#conversion of text file 2
 import pandas as pd 
 import csv
 data = pd.read_csv("c:/Users/gytkd/Desktop/production_budget_2.csv")
@@ -163,7 +163,7 @@ for i in range(len(pro_data)):
 
 f.close()
 
-#마지막 파일 순서 정리- 덜 됐음
+#File organizing for the last one- neeeds to be done! 
 import csv
 lists = []
 f = open('final.csv', 'r', encoding = 'utf-8', newline='')
